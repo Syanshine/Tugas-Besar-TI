@@ -4,72 +4,21 @@ import (
 	"fmt"
 )
 
-type Akun struct {
-	Username        string
-	Password        string
-	Saldo         float64
-	HistoriTransaksi []string
-}
-
-func (a *Akun) TambahkanSaldo(jumlah float64) {
-	a.Saldo += jumlah
-	a.HistoriTransaksi = append(a.HistoriTransaksi, fmt.Sprintf("Added: %.2f", jumlah))
-}
-
-func (a *Akun) Tarik(jumlah float64) bool {
-	if jumlah <= 0 {
-		fmt.Println("Saldo akun harus lebih besar dari 0.")
-		return false
-	}
-	if jumlah > a.Saldo {
-		fmt.Println("Saldo tidak mencukupi!")
-		return false
-	}
-	a.Saldo -= jumlah
-	a.HistoriTransaksi = append(a.HistoriTransaksi, fmt.Sprintf("Penarikan: %.2f", jumlah))
-	return true
-}
-
-func (a *Akun) TunjukkanSaldo() {
-	fmt.Printf("Saldo Terkini: %.2f\n", a.Saldo)
-}
-
-func (a *Akun) TunjukkanHistori() {
-	fmt.Println("Histori Transaksi:")
-	for _, transaksi := range a.HistoriTransaksi {
-		fmt.Println(transaksi)
-	}
-}
-
-func (a *Akun) TunjukkanInfoAkun() {
-	fmt.Printf("Username: %s\n", a.Username)
-	fmt.Printf("Saldo Terkini: %.2f\n", a.Saldo)
-}
-
-func displayMenu(options []string) {
-	fmt.Println("\nATM Menu:")
-	for i, option := range options {
-		fmt.Printf("%d. %s\n", i+1, option)
-	}
-}
-
 func main() {
-	akun := Akun{
-		Username: "syana",
-		Password: "2406420324",
-		Saldo:  3500000,
 	
-	}
+	var username string = "syana"
+	var password string = "2406420324"
+	var saldo float64 = 3500000
+	var historiTransaksi []string
 
-
-var username, password string
+	var inputUsername, inputPassword string
 
 	fmt.Print("Masukkan username: ")
-	fmt.Scan(&username)
+	fmt.Scan(&inputUsername)
 	fmt.Print("Masukkan password: ")
-	fmt.Scan(&password)
+	fmt.Scan(&inputPassword)
 
-	if username == akun.Username && password == akun.Password {
+	if inputUsername == username && inputPassword == password {
 		pilihanMenu := []string{
 			"Lihat Informasi Akun",
 			"Lihat Saldo",
@@ -88,31 +37,44 @@ var username, password string
 			switch pilihan {
 			case 1:
 				fmt.Println("\n--- Informasi Akun ---")
-				akun.TunjukkanInfoAkun()
-				fmt.Println("--- End of Account Information ---")
+				fmt.Printf("Username: %s\n", username)
+				fmt.Printf("Saldo Terkini: %.2f\n", saldo)
 			case 2:
-				fmt.Println("\n--- Showing Balance ---")
-				akun.TunjukkanSaldo()
-				fmt.Println("--- End of Balance ---")
+				fmt.Println("\n--- Menampilkan Saldo ---")
+				fmt.Printf("Saldo Terkini: %.2f\n", saldo)
 			case 3:
 				fmt.Println("\n--- Menambahkan Saldo ---")
 				var jumlah float64
 				fmt.Print("Masukkan jumlah yang ingin ditambahkan: ")
 				fmt.Scan(&jumlah)
-				akun.TambahkanSaldo(jumlah)
+				if jumlah <= 0 {
+					fmt.Println("Penambahan saldo harus lebih besar dari 0.")
+				} else {
+				saldo += jumlah
+				historiTransaksi = append(historiTransaksi, fmt.Sprintf("Penambahan: %.2f", jumlah))
 				fmt.Println("--- Saldo berhasil ditambahkan ---")
+				}
 			case 4:
 				fmt.Println("\n--- Tarik Tunai ---")
 				var jumlah float64
 				fmt.Print("Masukkan jumlah yang akan ditarik: ")
 				fmt.Scan(&jumlah)
-				if akun.Tarik(jumlah) {
+				if jumlah <= 0 {
+					fmt.Println("Jumlah penarikan harus lebih besar dari 0.")
+				} else if jumlah > saldo {
+					fmt.Println("Saldo tidak mencukupi!")
+				} else {
+					saldo -= jumlah
+					historiTransaksi = append(historiTransaksi, fmt.Sprintf("Penarikan: %.2f", jumlah))
 					fmt.Println("--- Penarikan tunai berhasil ---")
 				}
 			case 5:
 				fmt.Println("\n--- Histori Transaksi ---")
-				akun.TunjukkanHistori()
-				fmt.Println("--- End of History ---")
+				fmt.Println("Histori Transaksi:")
+				for _, transaksi := range historiTransaksi {
+					fmt.Println(transaksi)
+				}
+				fmt.Println("--- Histori transaksi berhasil ditampilkan ---")
 			case 6:
 				fmt.Println("Terima kasih telah menggunakan ATM!")
 				return
@@ -124,3 +86,14 @@ var username, password string
 		fmt.Println("Username atau Password salah, mohon coba lagi!")
 	}
 }
+
+func displayMenu(options []string) {
+	fmt.Println("\nATM Menu:")
+	for i, option := range options {
+		fmt.Printf("%d. %s\n", i+1, option)
+	}
+}
+
+
+
+		
